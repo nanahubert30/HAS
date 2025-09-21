@@ -19,8 +19,9 @@ if ($_POST && isset($_POST['setup_database'])) {
         $pdo->exec("set names utf8mb4");
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        // Create database
-        $pdo->exec("CREATE DATABASE IF NOT EXISTS $db_name CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+        // Drop and recreate database to ensure clean setup
+        $pdo->exec("DROP DATABASE IF EXISTS $db_name");
+        $pdo->exec("CREATE DATABASE $db_name CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
         $success_messages[] = "Database '$db_name' created successfully!";
         
         // Connect to the new database
@@ -28,10 +29,10 @@ if ($_POST && isset($_POST['setup_database'])) {
         $pdo->exec("set names utf8mb4");
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
-        // Create tables
+        // Create tables with correct structure including staff_id
         $tables_sql = [
             "users" => "
-                CREATE TABLE IF NOT EXISTS users (
+                CREATE TABLE users (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     username VARCHAR(50) UNIQUE NOT NULL,
                     staff_id VARCHAR(20) UNIQUE NOT NULL,
@@ -52,7 +53,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "appraisals" => "
-                CREATE TABLE IF NOT EXISTS appraisals (
+                CREATE TABLE appraisals (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     appraisee_id INT NOT NULL,
                     appraiser_id INT NOT NULL,
@@ -66,7 +67,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "performance_planning" => "
-                CREATE TABLE IF NOT EXISTS performance_planning (
+                CREATE TABLE performance_planning (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     appraisal_id INT NOT NULL,
                     key_result_area TEXT NOT NULL,
@@ -78,7 +79,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "training_records" => "
-                CREATE TABLE IF NOT EXISTS training_records (
+                CREATE TABLE training_records (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     user_id INT NOT NULL,
                     institution VARCHAR(100) NOT NULL,
@@ -91,7 +92,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "mid_year_reviews" => "
-                CREATE TABLE IF NOT EXISTS mid_year_reviews (
+                CREATE TABLE mid_year_reviews (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     appraisal_id INT NOT NULL,
                     target TEXT NOT NULL,
@@ -106,7 +107,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "end_year_reviews" => "
-                CREATE TABLE IF NOT EXISTS end_year_reviews (
+                CREATE TABLE end_year_reviews (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     appraisal_id INT NOT NULL,
                     target TEXT NOT NULL,
@@ -119,7 +120,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "core_competencies" => "
-                CREATE TABLE IF NOT EXISTS core_competencies (
+                CREATE TABLE core_competencies (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     appraisal_id INT NOT NULL,
                     competency_category VARCHAR(100) NOT NULL,
@@ -133,7 +134,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "non_core_competencies" => "
-                CREATE TABLE IF NOT EXISTS non_core_competencies (
+                CREATE TABLE non_core_competencies (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     appraisal_id INT NOT NULL,
                     competency_category VARCHAR(100) NOT NULL,
@@ -147,7 +148,7 @@ if ($_POST && isset($_POST['setup_database'])) {
                 ) ENGINE=InnoDB",
             
             "overall_assessments" => "
-                CREATE TABLE IF NOT EXISTS overall_assessments (
+                CREATE TABLE overall_assessments (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     appraisal_id INT NOT NULL UNIQUE,
                     performance_assessment_score DECIMAL(5,2),
@@ -177,19 +178,19 @@ if ($_POST && isset($_POST['setup_database'])) {
             $success_messages[] = "Table '$table_name' created successfully!";
         }
         
-        // Insert sample data
+        // Insert sample data with correct structure including staff_id
         $sample_users = [
-            ['admin', 'ADMIN001', md5('admin123'), 'admin', 'Mr.', 'System', 'Administrator', 'Male', 'System Administrator', 'IT Department', 'Grade A - 5000', '2020-01-01'],
-            ['dr.smith', 'DOC001', md5('password123'), 'appraiser', 'Dr.', 'John', 'Smith', 'Male', 'Chief Medical Officer', 'Medical Department', 'Grade B - 8000', '2018-03-15'],
-            ['dr.johnson', 'DOC002', md5('password123'), 'appraiser', 'Dr.', 'Mary', 'Johnson', 'Female', 'Head of Nursing', 'Nursing Department', 'Grade B - 7500', '2019-06-01'],
-            ['nurse.jane', 'NURSE001', md5('password123'), 'appraisee', 'Ms.', 'Jane', 'Doe', 'Female', 'Senior Nurse', 'Nursing Department', 'Grade C - 4500', '2021-02-10'],
-            ['nurse.mike', 'NURSE002', md5('password123'), 'appraisee', 'Mr.', 'Michael', 'Brown', 'Male', 'Staff Nurse', 'Emergency Department', 'Grade C - 4000', '2022-01-20'],
-            ['tech.sarah', 'TECH001', md5('password123'), 'appraisee', 'Ms.', 'Sarah', 'Wilson', 'Female', 'Medical Technician', 'Laboratory', 'Grade D - 3500', '2021-08-15'],
-            ['admin.peter', 'ADMIN002', md5('password123'), 'appraisee', 'Mr.', 'Peter', 'Jones', 'Male', 'Administrative Assistant', 'Administration', 'Grade D - 3000', '2020-11-01'],
-            ['dr.emily', 'DOC003', md5('password123'), 'appraisee', 'Dr.', 'Emily', 'Davis', 'Female', 'Junior Doctor', 'Medical Department', 'Grade C - 5500', '2023-01-05']
+            ['admin', 'ADMIN001', md5('admin123'), 'admin', 'Mr.', 'System', 'Administrator', '', 'Male', 'Grade A - 5000', 'System Administrator', 'IT Department', '2020-01-01'],
+            ['dr.smith', 'DOC001', md5('password123'), 'appraiser', 'Dr.', 'John', 'Smith', '', 'Male', 'Grade B - 8000', 'Chief Medical Officer', 'Medical Department', '2018-03-15'],
+            ['dr.johnson', 'DOC002', md5('password123'), 'appraiser', 'Dr.', 'Mary', 'Johnson', '', 'Female', 'Grade B - 7500', 'Head of Nursing', 'Nursing Department', '2019-06-01'],
+            ['nurse.jane', 'NURSE001', md5('password123'), 'appraisee', 'Ms.', 'Jane', 'Doe', '', 'Female', 'Grade C - 4500', 'Senior Nurse', 'Nursing Department', '2021-02-10'],
+            ['nurse.mike', 'NURSE002', md5('password123'), 'appraisee', 'Mr.', 'Michael', 'Brown', '', 'Male', 'Grade C - 4000', 'Staff Nurse', 'Emergency Department', '2022-01-20'],
+            ['tech.sarah', 'TECH001', md5('password123'), 'appraisee', 'Ms.', 'Sarah', 'Wilson', '', 'Female', 'Grade D - 3500', 'Medical Technician', 'Laboratory', '2021-08-15'],
+            ['admin.peter', 'ADMIN002', md5('password123'), 'appraisee', 'Mr.', 'Peter', 'Jones', '', 'Male', 'Grade D - 3000', 'Administrative Assistant', 'Administration', '2020-11-01'],
+            ['dr.emily', 'DOC003', md5('password123'), 'appraisee', 'Dr.', 'Emily', 'Davis', '', 'Female', 'Grade C - 5500', 'Junior Doctor', 'Medical Department', '2023-01-05']
         ];
         
-        $user_insert_sql = "INSERT IGNORE INTO users (username, staff_id, password, role, title, first_name, last_name, gender, job_title, department, grade_salary, appointment_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $user_insert_sql = "INSERT INTO users (username, staff_id, password, role, title, first_name, last_name, other_names, gender, grade_salary, job_title, department, appointment_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($user_insert_sql);
         
         $users_created = 0;
@@ -210,7 +211,7 @@ if ($_POST && isset($_POST['setup_database'])) {
             [8, 'West African College of Physicians', 'Clinical Research Methods', '2023-09-05']
         ];
         
-        $training_insert_sql = "INSERT IGNORE INTO training_records (user_id, institution, programme, date_completed) VALUES (?, ?, ?, ?)";
+        $training_insert_sql = "INSERT INTO training_records (user_id, institution, programme, date_completed) VALUES (?, ?, ?, ?)";
         $training_stmt = $pdo->prepare($training_insert_sql);
         
         $training_created = 0;
@@ -237,10 +238,14 @@ $connection_message = "";
 
 try {
     $test_pdo = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);
-    $connection_status = true;
-    $connection_message = "Database connection successful!";
+    // Check if staff_id column exists
+    $result = $test_pdo->query("DESCRIBE users staff_id");
+    if ($result) {
+        $connection_status = true;
+        $connection_message = "Database connection successful and staff_id column exists!";
+    }
 } catch (PDOException $e) {
-    $connection_message = "Database connection failed: " . $e->getMessage();
+    $connection_message = "Database connection failed or staff_id column missing: " . $e->getMessage();
 }
 ?>
 
@@ -306,7 +311,7 @@ try {
                                 <i class="fas fa-database"></i>
                             </div>
                             <h5>Database Setup Required</h5>
-                            <p class="text-muted">The database needs to be set up before you can use the system.</p>
+                            <p class="text-muted">The database needs to be set up or the staff_id column is missing.</p>
                         </div>
 
                         <div class="alert alert-info">
@@ -329,6 +334,11 @@ try {
                         </div>
                         <?php endif; ?>
 
+                        <div class="alert alert-warning">
+                            <h6><i class="fas fa-exclamation-triangle me-2"></i>Important Notice</h6>
+                            <p class="mb-0">This will recreate the database and all existing data will be lost. This ensures the staff_id column is properly created.</p>
+                        </div>
+
                         <form method="POST">
                             <div class="d-grid">
                                 <button type="submit" name="setup_database" class="btn btn-primary btn-lg">
@@ -344,7 +354,7 @@ try {
                                 <i class="fas fa-check"></i>
                             </div>
                             <h5>Setup Complete!</h5>
-                            <p class="text-muted">Your database has been set up successfully.</p>
+                            <p class="text-muted">Your database has been set up successfully with the staff_id column.</p>
                         </div>
 
                         <div class="alert alert-success">
@@ -361,16 +371,19 @@ try {
                             <div class="row">
                                 <div class="col-md-4">
                                     <strong>Admin:</strong><br>
+                                    Staff ID: <code>ADMIN001</code><br>
                                     Username: <code>admin</code><br>
                                     Password: <code>admin123</code>
                                 </div>
                                 <div class="col-md-4">
                                     <strong>Appraiser:</strong><br>
+                                    Staff ID: <code>DOC001</code><br>
                                     Username: <code>dr.smith</code><br>
                                     Password: <code>password123</code>
                                 </div>
                                 <div class="col-md-4">
                                     <strong>Appraisee:</strong><br>
+                                    Staff ID: <code>NURSE001</code><br>
                                     Username: <code>nurse.jane</code><br>
                                     Password: <code>password123</code>
                                 </div>
@@ -395,7 +408,7 @@ try {
 
                         <div class="alert alert-success">
                             <h6><i class="fas fa-info-circle me-2"></i>System Status</h6>
-                            <p class="mb-2">The database is already set up and ready to use.</p>
+                            <p class="mb-2">The database is set up and ready to use with the staff_id column.</p>
                             <p class="mb-0">You can proceed to the login page to access the system.</p>
                         </div>
 
@@ -404,16 +417,19 @@ try {
                             <div class="row">
                                 <div class="col-md-4">
                                     <strong>Admin:</strong><br>
+                                    Staff ID: <code>ADMIN001</code><br>
                                     Username: <code>admin</code><br>
                                     Password: <code>admin123</code>
                                 </div>
                                 <div class="col-md-4">
                                     <strong>Appraiser:</strong><br>
+                                    Staff ID: <code>DOC001</code><br>
                                     Username: <code>dr.smith</code><br>
                                     Password: <code>password123</code>
                                 </div>
                                 <div class="col-md-4">
                                     <strong>Appraisee:</strong><br>
+                                    Staff ID: <code>NURSE001</code><br>
                                     Username: <code>nurse.jane</code><br>
                                     Password: <code>password123</code>
                                 </div>
@@ -451,7 +467,7 @@ try {
         <?php if ($setup_complete): ?>
         setTimeout(function() {
             window.location.href = 'index.php';
-        }, 3000);
+        }, 5000);
         <?php endif; ?>
     </script>
 </body>
