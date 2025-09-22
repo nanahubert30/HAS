@@ -279,13 +279,13 @@ $stats = $stats_stmt->fetch(PDO::FETCH_ASSOC);
                                                     <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
                                                 </div>
                                                 <div>
-                                                    <strong><?php echo htmlspecialchars($user['title'] . ' ' . $user['first_name'] . ' ' . $user['last_name']); ?></strong>
-                                                    <br><small class="text-muted"><?php echo htmlspecialchars($user['job_title']); ?></small>
+                                                    <strong><?php echo htmlspecialchars(($user['title'] ?? '') . ' ' . $user['first_name'] . ' ' . $user['last_name']); ?></strong>
+                                                    <br><small class="text-muted"><?php echo htmlspecialchars($user['job_title'] ?? 'N/A'); ?></small>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <strong><?php echo htmlspecialchars($user['staff_id']); ?></strong>
+                                            <strong><?php echo htmlspecialchars($user['staff_id'] ?? 'N/A'); ?></strong>
                                             <br><small class="text-muted"><?php echo htmlspecialchars($user['username']); ?></small>
                                         </td>
                                         <td>
@@ -301,7 +301,7 @@ $stats = $stats_stmt->fetch(PDO::FETCH_ASSOC);
                                                 <?php echo ucfirst($user['role']); ?>
                                             </span>
                                         </td>
-                                        <td><?php echo htmlspecialchars($user['department']); ?></td>
+                                        <td><?php echo htmlspecialchars($user['department'] ?? 'N/A'); ?></td>
                                         <td>
                                             <?php if ($user['is_approved'] || $user['role'] == 'admin'): ?>
                                                 <span class="badge bg-success">Approved</span>

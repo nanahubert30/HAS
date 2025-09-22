@@ -211,36 +211,36 @@ $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
                         </a>
                         
                         <?php if ($role == 'admin'): ?>
-                        <a class="nav-link" href="./admin/manage_users.php">
+                        <a class="nav-link" href="manage_users.php">
                             <i class="fas fa-users me-2"></i> Manage Users
                         </a>
-                        <a class="nav-link" href="./admin/view_all_appraisals.php">
+                        <a class="nav-link" href="view_all_appraisals.php">
                             <i class="fas fa-clipboard-list me-2"></i> All Appraisals
                         </a>
-                        <a class="nav-link" href="./admin/reports.php">
+                        <a class="nav-link" href="reports.php">
                             <i class="fas fa-chart-bar me-2"></i> System Reports
                         </a>
                         <?php elseif ($role == 'appraiser'): ?>
-                        <a class="nav-link" href="./admin/my_appraisals.php">
+                        <a class="nav-link" href="my_appraisals.php">
                             <i class="fas fa-clipboard-check me-2"></i> My Appraisals
                         </a>
-                        <a class="nav-link" href="./admin/create_appraisal.php">
+                        <a class="nav-link" href="create_appraisal.php">
                             <i class="fas fa-plus me-2"></i> New Appraisal
                         </a>
                         <?php else: ?>
-                        <a class="nav-link" href="./admin/my_appraisals.php">
+                        <a class="nav-link" href="ssmy_appraisals.php">
                             <i class="fas fa-user-edit me-2"></i> My Appraisals
                         </a>
                         <?php endif; ?>
                         
-                        <a class="nav-link" href="./admin/performance_planning.php">
+                        <a class="nav-link" href="performance_planning.php">
                             <i class="fas fa-bullseye me-2"></i> Performance Planning
                         </a>
-                        <a class="nav-link" href="./admin/reports.php">
+                        <a class="nav-link" href="reports.php">
                             <i class="fas fa-chart-bar me-2"></i> Reports
                         </a>
                         <hr class="text-white-50">
-                        <a class="nav-link" href="./admin/profile.php">
+                        <a class="nav-link" href="profile.php">
                             <i class="fas fa-user me-2"></i> Profile
                         </a>
                         <a class="nav-link" href="index.php?logout=1">
@@ -494,7 +494,7 @@ $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
                                 <div class="card-body">
                                     <div class="d-grid gap-2">
                                         <?php if ($role == 'admin'): ?>
-                                            <a href="manage_users.php" class="btn btn-outline-primary">
+                                            <a href="./admin/manage_users.php" class="btn btn-outline-primary">
                                                 <i class="fas fa-user-plus me-2"></i>Add New User
                                             </a>
                                             <a href="view_all_appraisals.php" class="btn btn-outline-info">
