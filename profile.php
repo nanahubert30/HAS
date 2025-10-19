@@ -124,59 +124,11 @@ if ($_POST && isset($_POST['change_password'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .profile-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .profile-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px 15px 0 0;
-            text-align: center;
-        }
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: bold;
-            margin: 0 auto 1rem;
-            border: 4px solid rgba(255,255,255,0.3);
-        }
-        .section-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .section-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 15px 15px 0 0;
-            margin: 0;
-        }
-    </style>
-</head>
-<body>
+<?php
+$page_title = 'Profile - Hospital Appraisal System';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-3 col-lg-2 px-0">
@@ -407,7 +359,6 @@ if ($_POST && isset($_POST['change_password'])) {
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         // Password confirmation validation
         document.getElementById('confirm_password').addEventListener('input', function() {
@@ -439,5 +390,4 @@ if ($_POST && isset($_POST['change_password'])) {
             }
         });
     </script>
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>

@@ -108,40 +108,11 @@ if ($_POST && isset($_POST['save_midyear_review'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mid-Year Review - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .form-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .section-header {
-            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 15px 15px 0 0;
-            margin: 0;
-        }
-        .review-row {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-    </style>
-</head>
-<body>
+<?php
+$page_title = 'Mid-Year Review - Hospital Appraisal System';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
@@ -323,7 +294,6 @@ if ($_POST && isset($_POST['save_midyear_review'])) {
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         // Form validation
         document.getElementById('midYearForm').addEventListener('submit', function(e) {
@@ -344,5 +314,5 @@ if ($_POST && isset($_POST['save_midyear_review'])) {
             }
         });
     </script>
-</body>
-</html>
+
+<?php include 'includes/footer.php'; ?>

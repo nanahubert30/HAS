@@ -109,69 +109,11 @@ $rating_stmt->execute();
 $rating_stats = $rating_stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .report-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .report-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem;
-            border-radius: 15px 15px 0 0;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .stat-card:hover { transform: translateY(-5px); }
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-        .progress-custom {
-            height: 8px;
-            border-radius: 10px;
-        }
-        .rating-badge {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            text-align: center;
-            line-height: 30px;
-            font-size: 12px;
-        }
-        .rating-1 { background: #dc3545; }
-        .rating-2 { background: #fd7e14; }
-        .rating-3 { background: #ffc107; color: black; }
-        .rating-4 { background: #198754; }
-        .rating-5 { background: #0d6efd; }
-    </style>
-</head>
-<body>
+<?php
+$page_title = 'Reports - Hospital Appraisal System';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-3 col-lg-2 px-0">
@@ -422,6 +364,4 @@ $rating_stats = $rating_stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>

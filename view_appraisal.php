@@ -96,100 +96,13 @@ $overall_assessment = $overall_stmt->fetch(PDO::FETCH_ASSOC);
 $created_message = isset($_GET['created']) ? "Appraisal created successfully!" : "";
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Appraisal - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .appraisal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        .section-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .section-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 15px 15px 0 0;
-            margin: 0;
-        }
-        .status-timeline {
-            position: relative;
-        }
-        .status-step {
-            padding: 1rem;
-            border-left: 3px solid #dee2e6;
-            margin-left: 1rem;
-            position: relative;
-        }
-        .status-step.active {
-            border-left-color: #28a745;
-        }
-        .status-step.current {
-            border-left-color: #007bff;
-            background-color: #f8f9ff;
-        }
-        .status-step::before {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 1.5rem;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #dee2e6;
-        }
-        .status-step.active::before {
-            background-color: #28a745;
-        }
-        .status-step.current::before {
-            background-color: #007bff;
-        }
-        .competency-score {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .score-1 { background: #dc3545; }
-        .score-2 { background: #fd7e14; }
-        .score-3 { background: #ffc107; color: black; }
-        .score-4 { background: #198754; }
-        .score-5 { background: #0d6efd; }
-        .action-buttons {
-            position: sticky;
-            top: 20px;
-            background: white;
-            padding: 1rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        @media print {
-            .no-print { display: none !important; }
-            .section-card { box-shadow: none; border: 1px solid #dee2e6; }
-        }
-    </style>
-</head>
-<body>
+?>
+
+<?php
+$page_title = 'View Appraisal - Hospital Appraisal System';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-lg-9">
@@ -826,6 +739,4 @@ $created_message = isset($_GET['created']) ? "Appraisal created successfully!" :
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>
