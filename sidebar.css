@@ -1,0 +1,129 @@
+/* Professional Hospital Management System Theme */
+.sidebar {
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    color: #2d3e50;
+    min-height: 100vh;
+    box-shadow: 2px 0 12px rgba(44, 62, 80, 0.07);
+    border-radius: 0 24px 24px 0;
+    padding-top: 2rem;
+}
+.sidebar .fa-hospital {
+    color: #3498db;
+}
+.sidebar h5 {
+    font-weight: 700;
+    color: #3498db;
+    margin-bottom: 0.25rem;
+}
+.sidebar small {
+    color: #7f8c8d;
+}
+.nav-link {
+    color: #2d3e50;
+    font-weight: 500;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: background 0.2s, color 0.2s;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+.nav-link i {
+    color: #3498db;
+    margin-right: 0.75rem;
+    font-size: 1.1em;
+}
+.nav-link:hover, .nav-link.active {
+    background: linear-gradient(90deg, #eaf6fb 0%, #d6eaff 100%);
+    color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.07);
+}
+.stat-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(44,62,80,0.09);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e3eaf3;
+}
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 24px rgba(52,152,219,0.12);
+}
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #fff;
+    background: linear-gradient(135deg, #3498db 0%, #6dd5fa 100%);
+    box-shadow: 0 2px 8px rgba(52,152,219,0.09);
+}
+.main-content {
+    background-color: #f4f8fb;
+    min-height: 100vh;
+    border-radius: 24px 0 0 24px;
+    box-shadow: 0 2px 12px rgba(44,62,80,0.05);
+    padding: 2rem;
+}
+.status-badge {
+    font-size: 0.8rem;
+    padding: 0.4em 0.8em;
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6dd5fa 0%, #3498db 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2em;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.09);
+}
+.card {
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(44,62,80,0.07);
+    border: 1px solid #e3eaf3;
+}
+.card-header {
+    background: linear-gradient(90deg, #eaf6fb 0%, #d6eaff 100%);
+    border-radius: 18px 18px 0 0;
+    color: #3498db;
+    font-weight: 600;
+}
+.btn-outline-primary {
+    border-color: #3498db;
+    color: #3498db;
+}
+.btn-outline-primary:hover {
+    background: #3498db;
+    color: #fff;
+}
+.btn-outline-info {
+    border-color: #6dd5fa;
+    color: #3498db;
+}
+.btn-outline-info:hover {
+    background: #6dd5fa;
+    color: #fff;
+}
+.btn-outline-success {
+    border-color: #27ae60;
+    color: #27ae60;
+}
+.btn-outline-success:hover {
+    background: #27ae60;
+    color: #fff;
+}
+.fa {
+    vertical-align: middle;
+}
