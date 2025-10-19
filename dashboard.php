@@ -127,6 +127,7 @@ $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
     <title>Dashboard - Hospital Appraisal System</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="sidebar.css" rel="stylesheet">
     <style>
         .sidebar {
             min-height: 100vh;
@@ -188,66 +189,7 @@ $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 px-0">
-                <div class="sidebar p-3">
-                    <div class="text-center mb-4">
-                        <i class="fas fa-hospital fa-2x mb-2"></i>
-                        <h5>St. Mary's Hospital</h5>
-                        <small>Appraisal System</small>
-                    </div>
-                    
-                    <div class="text-center mb-4">
-                        <div class="user-avatar mx-auto mb-2">
-                            <?php echo strtoupper(substr($_SESSION['full_name'], 0, 2)); ?>
-                        </div>
-                        <div>
-                            <strong><?php echo htmlspecialchars($_SESSION['full_name']); ?></strong>
-                            <br><small><?php echo ucfirst($role); ?></small>
-                        </div>
-                    </div>
-
-                    <nav class="nav flex-column">
-                        <a class="nav-link active" href="dashboard.php">
-                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                        </a>
-                        
-                        <?php if ($role == 'admin'): ?>
-                        <a class="nav-link" href="manage_users.php">
-                            <i class="fas fa-users me-2"></i> Manage Users
-                        </a>
-                        <a class="nav-link" href="view_all_appraisals.php">
-                            <i class="fas fa-clipboard-list me-2"></i> All Appraisals
-                        </a>
-                        <a class="nav-link" href="reports.php">
-                            <i class="fas fa-chart-bar me-2"></i> System Reports
-                        </a>
-                        <?php elseif ($role == 'appraiser'): ?>
-                        <a class="nav-link" href="my_appraisals.php">
-                            <i class="fas fa-clipboard-check me-2"></i> My Appraisals
-                        </a>
-                        <a class="nav-link" href="create_appraisal.php">
-                            <i class="fas fa-plus me-2"></i> New Appraisal
-                        </a>
-                        <?php else: ?>
-                        <a class="nav-link" href="my_appraisals.php">
-                            <i class="fas fa-user-edit me-2"></i> My Appraisals
-                        </a>
-                        <?php endif; ?>
-                        
-                        <a class="nav-link" href="performance_planning.php">
-                            <i class="fas fa-bullseye me-2"></i> Performance Planning
-                        </a>
-                        <a class="nav-link" href="reports.php">
-                            <i class="fas fa-chart-bar me-2"></i> Reports
-                        </a>
-                        <hr class="text-white-50">
-                        <a class="nav-link" href="profile.php">
-                            <i class="fas fa-user me-2"></i> Profile
-                        </a>
-                        <a class="nav-link" href="index.php?logout=1">
-                            <i class="fas fa-sign-out-alt me-2"></i> Logout
-                        </a>
-                    </nav>
-                </div>
+                <?php include 'sidebar.php'; ?>
             </div>
 
             <!-- Main Content -->

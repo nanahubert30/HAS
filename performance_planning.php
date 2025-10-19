@@ -49,6 +49,7 @@ foreach ($planning_data as $item) {
     <title>Performance Planning - Hospital Appraisal System</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="sidebar.css" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; }
         .planning-card {
@@ -79,7 +80,10 @@ foreach ($planning_data as $item) {
 <body>
     <div class="container-fluid py-4">
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-3 col-lg-2 px-0">
+                <?php include 'sidebar.php'; ?>
+            </div>
+            <div class="col-md-9 col-lg-10">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h1 class="h3 mb-1">Performance Planning</h1>
