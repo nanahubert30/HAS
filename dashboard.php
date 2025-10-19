@@ -119,72 +119,11 @@ function getRecentAppraisals($db, $user_id, $role) {
 $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        .sidebar {
-            min-height: 100vh;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            border-radius: 8px;
-            margin: 2px 0;
-            transition: all 0.3s ease;
-        }
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255,255,255,0.2) !important;
-            color: white !important;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-        .main-content {
-            background-color: #f8f9fa;
-            min-height: 100vh;
-        }
-        .status-badge {
-            font-size: 0.75rem;
-            padding: 0.35em 0.65em;
-        }
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
+<?php
+$page_title = 'Dashboard - Hospital Appraisal System';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
@@ -493,7 +432,6 @@ $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
@@ -514,5 +452,5 @@ $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
             }, 300000);
         });
     </script>
-</body>
-</html>
+
+<?php include 'includes/footer.php'; ?>

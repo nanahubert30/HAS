@@ -40,44 +40,13 @@ foreach ($planning_data as $item) {
     $appraisals[$item['appraisal_id']][] = $item;
 }
 ?>
+?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance Planning - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .planning-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .planning-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 15px 15px 0 0;
-        }
-        .kra-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid #667eea;
-        }
-        .status-badge {
-            font-size: 0.75rem;
-            padding: 0.35em 0.65em;
-        }
-    </style>
-</head>
-<body>
+<?php
+$page_title = 'Performance Planning - Hospital Appraisal System';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-3 col-lg-2 px-0">
@@ -260,6 +229,4 @@ foreach ($planning_data as $item) {
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>

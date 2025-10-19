@@ -404,87 +404,13 @@ foreach ($existing_noncore as $item) {
     $existing_noncore_indexed[$key] = $item;
 }
 ?>
+?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $appraisal_id ? 'Final Appraisal' : 'Create New Appraisal'; ?> - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .form-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        .section-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 15px 15px 0 0;
-            margin: 0;
-        }
-        .rating-scale {
-            background: #e3f2fd;
-            border: 1px solid #bbdefb;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .competency-item {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .score-radio {
-            transform: scale(1.2);
-            margin: 0 0.5rem;
-        }
-        .target-row {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .performance-row {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            padding: 1rem;
-        }
-        .add-row-btn {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            border: none;
-            border-radius: 25px;
-            padding: 0.5rem 1rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .add-row-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            color: white;
-        }
-        .remove-row-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            color: white;
-        }
-    </style>
-</head>
-<body>
+<?php
+$page_title = $appraisal_id ? 'Final Appraisal' : 'Create New Appraisal';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-md-3 col-lg-2 px-0">
@@ -1091,7 +1017,6 @@ foreach ($existing_noncore as $item) {
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         let performanceRowCount = 0;
         let trainingRowCount = 0;
@@ -1352,5 +1277,4 @@ foreach ($existing_noncore as $item) {
             });
         }
     </script>
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>

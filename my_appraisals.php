@@ -58,63 +58,18 @@ $stats_stmt->execute();
 $stats = $stats_stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Appraisals - Hospital Appraisal System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="sidebar.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        .stat-card:hover { transform: translateY(-5px); }
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-        }
-        .appraisal-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        .appraisal-card:hover { transform: translateY(-5px); }
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-        .status-badge {
-            font-size: 0.75rem;
-            padding: 0.35em 0.65em;
-        }
-    </style>
-</head>
-<body>
+<?php
+$page_title = 'My Appraisals - Hospital Appraisal System';
+include 'includes/header.php';
+?>
+
     <div class="container-fluid py-4">
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-3 col-lg-2 px-0">
+                <?php include 'sidebar.php'; ?>
+            </div>
+            
+            <div class="col-md-9 col-lg-10">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h1 class="h3 mb-1">My Appraisals</h1>
@@ -309,6 +264,4 @@ $stats = $stats_stmt->fetch(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>
