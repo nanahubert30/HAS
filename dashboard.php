@@ -228,7 +228,7 @@ $recent_appraisals = getRecentAppraisals($db, $user_id, $role);
                             <i class="fas fa-plus me-2"></i> New Appraisal
                         </a>
                         <?php else: ?>
-                        <a class="nav-link" href="ssmy_appraisals.php">
+                        <a class="nav-link" href="my_appraisals.php">
                             <i class="fas fa-user-edit me-2"></i> My Appraisals
                         </a>
                         <?php endif; ?>

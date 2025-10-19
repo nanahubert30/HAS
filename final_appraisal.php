@@ -6,7 +6,7 @@ checkSession();
 
 // Only appraisers and admins can create appraisals
 if (!in_array($_SESSION['role'], ['admin', 'appraiser'])) {
-    header("Location: create_appraisal.php");
+    header("Location: dashboard.php");
     exit();
 }
 
@@ -727,6 +727,7 @@ foreach ($existing_noncore as $item) {
                         </div>
                     </div>
 
+                    <!-- FINAL APPRAISAL SECTION -->
                     <?php else: ?>
 
                     <!-- Section 4: End-of-Year Review -->
