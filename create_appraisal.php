@@ -149,10 +149,15 @@ if ($_POST && isset($_POST['create_appraisal']) && !$appraisal_id) {
                                      VALUES (:appraisal_id, :key_result_area, :target, :resources_required, :competencies_required)";
                     $planning_stmt = $db->prepare($planning_query);
                     $planning_stmt->bindParam(':appraisal_id', $appraisal_id);
-                    $planning_stmt->bindParam(':key_result_area', $_POST['key_result_areas'][$i]);
-                    $planning_stmt->bindParam(':target', $_POST['targets'][$i] ?? '');
-                    $planning_stmt->bindParam(':resources_required', $_POST['resources_required'][$i] ?? '');
-                    $planning_stmt->bindParam(':competencies_required', $_POST['competencies_required'] ?? '');
+                    $key_result_area = $_POST['key_result_areas'][$i];
+                    $target = $_POST['targets'][$i] ?? '';
+                    $resources = $_POST['resources_required'][$i] ?? '';
+                    $competencies = $_POST['competencies_required'][$i] ?? '';
+                    
+                    $planning_stmt->bindParam(':key_result_area', $key_result_area);
+                    $planning_stmt->bindParam(':target', $target);
+                    $planning_stmt->bindParam(':resources_required', $resources);
+                    $planning_stmt->bindParam(':competencies_required', $competencies);
                     $planning_stmt->execute();
                 }
             }
