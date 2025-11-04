@@ -230,22 +230,154 @@ function generateAppraisalReference() {
  * @param int $user_id Current user ID
  * @param string $role User role
  * @param array $appraisal Appraisal data
- * @return bool Has permission
+ * @param string $user_department User's department (for HOD access)
+ * @return array Permission details
  */
-function hasAppraisalPermission($user_id, $role, $appraisal) {
+function hasAppraisalPermission($user_id, $role, $appraisal, $user_department = null) {
+    $permissions = [
+        'can_view' => false,
+        'can_edit' => false,
+        'can_comment' => false,
+        'can_save' => false,
+        'reason' => 'No permission'
+    ];
+    
+    if ($role == 'admin') {
+        return [
+            'can_view' => true,
+            'can_edit' => true,
+            'can_comment' => true,
+            'can_save' => true,
+            'reason' => 'Administrator access'
+        ];
+    }
+    
+    if ($role == 'appraiser' && $user_id == $appraisal['appraiser_id']) {
+        return [
+            'can_view' => true,
+            'can_edit' => true,
+            'can_comment' => true,
+            'can_save' => true,
+            'reason' => 'Assigned appraiser'
+        ];
+    }
+    
+    if ($role == 'appraisee' && $user_id == $appraisal['appraisee_id']) {
+        return [
+            'can_view' => true,
+            'can_edit' => false,
+            'can_comment' => true,
+            'can_save' => false,
+            'reason' => 'Appraisee access'
+        ];
+    }
+    
+    if ($role == 'hod' && $user_department == $appraisal['appraisee_dept']) {
+        return [
+            'can_view' => true,
+            'can_edit' => false,
+            'can_comment' => true,
+            'can_save' => false,
+            'reason' => 'Head of Department access'
+        ];
+    }
+    
+    return $permissions;
+}
+
+/**
+ * Get user permissions for appraisal stage
+ * @param string $role User role
+ * @param string $status Appraisal status
+ * @param bool $isOwner Whether user owns/created the appraisal
+ * @return array Permission flags
+ */
+function getAppraisalStagePermissions($role, $status, $isOwner = false) {
+    $permissions = [
+        'can_plan' => false,
+        'can_review' => false,
+        'can_finalize' => false
+    ];
+    
+    switch ($role) {
+        case 'admin':
+            $permissions['can_plan'] = true;
+            $permissions['can_review'] = true;
+            $permissions['can_finalize'] = true;
+            break;
+            
+        case 'appraiser':
+            if ($isOwner) {
+                $permissions['can_plan'] = $status == 'draft' || $status == 'planning';
+                $permissions['can_review'] = in_array($status, ['planning', 'mid_review']);
+                $permissions['can_finalize'] = in_array($status, ['mid_review', 'final_review']);
+            }
+            break;
+            
+        case 'appraisee':
+            $permissions['can_plan'] = false;
+            $permissions['can_review'] = in_array($status, ['planning', 'mid_review', 'final_review']);
+            $permissions['can_finalize'] = false;
+            break;
+            
+        case 'hod':
+            $permissions['can_plan'] = false;
+            $permissions['can_review'] = in_array($status, ['mid_review', 'final_review']);
+            $permissions['can_finalize'] = false;
+            break;
+    }
+    
+    return $permissions;
+}
+
+/**
+ * Check if user can edit specific section
+ * @param string $section Section identifier
+ * @param string $role User role
+ * @param array $appraisal Appraisal data
+ * @return bool Can edit section
+ */
+function canEditSection($section, $role, $appraisal) {
+    // Admin can edit all sections
     if ($role == 'admin') {
         return true;
     }
     
-    if ($role == 'appraiser' && $user_id == $appraisal['appraiser_id']) {
-        return true;
-    }
+    // Define section permissions by role
+    $permissions = [
+        'appraiser' => [
+            'performance_planning' => true,
+            'targets' => true,
+            'core_competencies' => true,
+            'non_core_competencies' => true,
+            'appraiser_comments' => true,
+            'career_development' => true,
+            'promotion_assessment' => true
+        ],
+        'appraisee' => [
+            'performance_planning' => false,
+            'targets' => false,
+            'core_competencies' => false,
+            'non_core_competencies' => false,
+            'appraiser_comments' => false,
+            'career_development' => false,
+            'promotion_assessment' => false,
+            'appraisee_comments' => true
+        ],
+        'hod' => [
+            'performance_planning' => false,
+            'targets' => false,
+            'core_competencies' => false,
+            'non_core_competencies' => false,
+            'appraiser_comments' => false,
+            'career_development' => false,
+            'promotion_assessment' => false,
+            'hod_comments' => true
+        ]
+    ];
     
-    if ($role == 'appraisee' && $user_id == $appraisal['appraisee_id']) {
-        return true;
-    }
-    
-    return false;
+    // Return permission if defined for role and section
+    return isset($permissions[$role][$section]) ? $permissions[$role][$section] : false;
 }
 
 /**
