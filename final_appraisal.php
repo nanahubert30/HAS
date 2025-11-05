@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once 'config/database.php';
+// Load lightweight permission helpers (kept separate to avoid function redeclare)
+require_once __DIR__ . '/includes/permissions.php';
 
 checkSession();
 
@@ -181,10 +183,10 @@ if ($_POST && isset($_POST['create_appraisal']) && !$appraisal_id) {
                                      VALUES (:appraisal_id, :key_result_area, :target, :resources_required, :competencies_required)";
                     $planning_stmt = $db->prepare($planning_query);
                     $planning_stmt->bindParam(':appraisal_id', $appraisal_id);
-                    $planning_stmt->bindParam(':key_result_area', $_POST['key_result_areas'][$i]);
-                    $planning_stmt->bindParam(':target', $_POST['targets'][$i] ?? '');
-                    $planning_stmt->bindParam(':resources_required', $_POST['resources_required'][$i] ?? '');
-                    $planning_stmt->bindParam(':competencies_required', $_POST['competencies_required'] ?? '');
+                    $planning_stmt->bindValue(':key_result_area', $_POST['key_result_areas'][$i]);
+                    $planning_stmt->bindValue(':target', $_POST['targets'][$i] ?? '');
+                    $planning_stmt->bindValue(':resources_required', $_POST['resources_required'][$i] ?? '');
+                    $planning_stmt->bindValue(':competencies_required', $_POST['competencies_required'] ?? '');
                     $planning_stmt->execute();
                 }
             }
@@ -235,10 +237,10 @@ if ($_POST && isset($_POST['save_final_appraisal']) && $appraisal_id) {
                     $insert_stmt = $db->prepare($insert_query);
                     $insert_stmt->bindParam(':appraisal_id', $appraisal_id);
                     $insert_stmt->bindParam(':target', $target);
-                    $insert_stmt->bindParam(':performance_assessment', $_POST['performance_assessment'][$index] ?? '');
-                    $insert_stmt->bindParam(':weight', $_POST['target_weight'][$index] ?? 5.00);
-                    $insert_stmt->bindParam(':score', $_POST['target_score'][$index] ?? null);
-                    $insert_stmt->bindParam(':comments', $_POST['target_comments'][$index] ?? '');
+                    $insert_stmt->bindValue(':performance_assessment', $_POST['performance_assessment'][$index] ?? '');
+                    $insert_stmt->bindValue(':weight', $_POST['target_weight'][$index] ?? 5.00);
+                    $insert_stmt->bindValue(':score', $_POST['target_score'][$index] ?? null);
+                    $insert_stmt->bindValue(':comments', $_POST['target_comments'][$index] ?? '');
                     $insert_stmt->execute();
                 }
             }
@@ -267,7 +269,7 @@ if ($_POST && isset($_POST['save_final_appraisal']) && $appraisal_id) {
                         $insert_stmt->bindParam(':weight', $weight);
                         $insert_stmt->bindParam(':score', $score);
                         $insert_stmt->bindParam(':weighted_score', $weighted_score);
-                        $insert_stmt->bindParam(':comments', $_POST['core_comments'][$category][$index] ?? '');
+                        $insert_stmt->bindValue(':comments', $_POST['core_comments'][$category][$index] ?? '');
                         $insert_stmt->execute();
                     }
                 }
@@ -297,7 +299,7 @@ if ($_POST && isset($_POST['save_final_appraisal']) && $appraisal_id) {
                         $insert_stmt->bindParam(':weight', $weight);
                         $insert_stmt->bindParam(':score', $score);
                         $insert_stmt->bindParam(':weighted_score', $weighted_score);
-                        $insert_stmt->bindParam(':comments', $_POST['noncore_comments'][$category][$index] ?? '');
+                        $insert_stmt->bindValue(':comments', $_POST['noncore_comments'][$category][$index] ?? '');
                         $insert_stmt->execute();
                     }
                 }

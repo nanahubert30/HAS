@@ -40,7 +40,6 @@ foreach ($planning_data as $item) {
     $appraisals[$item['appraisal_id']][] = $item;
 }
 ?>
-?>
 
 <?php
 $page_title = 'Performance Planning - Hospital Appraisal System';

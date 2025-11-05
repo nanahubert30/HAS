@@ -38,8 +38,8 @@ if ($_POST && isset($_POST['register'])) {
         // Check if staff_id or username already exists
         $check_query = "SELECT COUNT(*) FROM users WHERE staff_id = :staff_id OR username = :username";
         $check_stmt = $db->prepare($check_query);
-        $check_stmt->bindParam(':staff_id', $_POST['staff_id']);
-        $check_stmt->bindParam(':username', $_POST['username']);
+        $check_stmt->bindValue(':staff_id', $_POST['staff_id']);
+        $check_stmt->bindValue(':username', $_POST['username']);
         $check_stmt->execute();
         
         if ($check_stmt->fetchColumn() > 0) {
@@ -51,18 +51,18 @@ if ($_POST && isset($_POST['register'])) {
                          VALUES (:staff_id, :username, :password, 'appraisee', :title, :first_name, :last_name, :other_names, :gender, :grade_salary, :job_title, :department, :appointment_date, FALSE)";
         
         $stmt = $db->prepare($insert_query);
-        $stmt->bindParam(':staff_id', $_POST['staff_id']);
-        $stmt->bindParam(':username', $_POST['username']);
-        $stmt->bindParam(':password', md5($_POST['password']));
-        $stmt->bindParam(':title', $_POST['title']);
-        $stmt->bindParam(':first_name', $_POST['first_name']);
-        $stmt->bindParam(':last_name', $_POST['last_name']);
-        $stmt->bindParam(':other_names', $_POST['other_names']);
-        $stmt->bindParam(':gender', $_POST['gender']);
-        $stmt->bindParam(':grade_salary', $_POST['grade_salary']);
-        $stmt->bindParam(':job_title', $_POST['job_title']);
-        $stmt->bindParam(':department', $_POST['department']);
-        $stmt->bindParam(':appointment_date', $_POST['appointment_date']);
+        $stmt->bindValue(':staff_id', $_POST['staff_id']);
+        $stmt->bindValue(':username', $_POST['username']);
+        $stmt->bindValue(':password', md5($_POST['password']));
+        $stmt->bindValue(':title', $_POST['title']);
+        $stmt->bindValue(':first_name', $_POST['first_name']);
+        $stmt->bindValue(':last_name', $_POST['last_name']);
+        $stmt->bindValue(':other_names', $_POST['other_names']);
+        $stmt->bindValue(':gender', $_POST['gender']);
+        $stmt->bindValue(':grade_salary', $_POST['grade_salary']);
+        $stmt->bindValue(':job_title', $_POST['job_title']);
+        $stmt->bindValue(':department', $_POST['department']);
+        $stmt->bindValue(':appointment_date', $_POST['appointment_date']);
         
         $stmt->execute();
         
