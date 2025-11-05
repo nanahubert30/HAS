@@ -80,9 +80,9 @@ if ($_POST && isset($_POST['save_midyear_review'])) {
                     $insert_stmt = $db->prepare($insert_query);
                     $insert_stmt->bindParam(':appraisal_id', $appraisal_id);
                     $insert_stmt->bindParam(':target', $target);
-                    $insert_stmt->bindParam(':progress_review', $_POST['progress_review'][$index] ?? '');
-                    $insert_stmt->bindParam(':remarks', $_POST['remarks'][$index] ?? '');
-                    $insert_stmt->bindParam(':review_date', $_POST['review_date'] ?? date('Y-m-d'));
+                    $insert_stmt->bindValue(':progress_review', $_POST['progress_review'][$index] ?? '');
+                    $insert_stmt->bindValue(':remarks', $_POST['remarks'][$index] ?? '');
+                    $insert_stmt->bindValue(':review_date', $_POST['review_date'] ?? date('Y-m-d'));
                     $insert_stmt->execute();
                 }
             }

@@ -112,7 +112,7 @@ if ($_POST && isset($_POST['change_password'])) {
         // Update password
         $password_query = "UPDATE users SET password = :password WHERE id = :user_id";
         $password_stmt = $db->prepare($password_query);
-        $password_stmt->bindParam(':password', md5($new_password));
+        $password_stmt->bindValue(':password', md5($new_password));
         $password_stmt->bindParam(':user_id', $user_id);
         $password_stmt->execute();
         

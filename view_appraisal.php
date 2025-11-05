@@ -96,8 +96,6 @@ $overall_assessment = $overall_stmt->fetch(PDO::FETCH_ASSOC);
 $created_message = isset($_GET['created']) ? "Appraisal created successfully!" : "";
 ?>
 
-?>
-
 <?php
 $page_title = 'View Appraisal - Hospital Appraisal System';
 include 'includes/header.php';

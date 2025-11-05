@@ -89,7 +89,7 @@ if ($user_role != 'admin') {
 
 $activity_stmt = $db->prepare($activity_query);
 if ($user_role != 'admin') {
-    $activity_stmt->bindParam(':user_id', $_SESSION['user_id']);
+    $activity_stmt->bindValue(':user_id', $_SESSION['user_id']);
 }
 $activity_stmt->execute();
 $recent_activity = $activity_stmt->fetchAll(PDO::FETCH_ASSOC);

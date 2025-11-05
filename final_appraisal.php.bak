@@ -4,11 +4,26 @@ require_once 'config/database.php';
 
 checkSession();
 
-// Only appraisers and admins can create appraisals
-if (!in_array($_SESSION['role'], ['admin', 'appraiser'])) {
-    header("Location: create_appraisal.php");
-    exit();
-}
+$database = new DatabaseConfig();
+$db = $database->getConnection();
+
+// Get user's department and role for permission checks
+$user_id = $_SESSION['user_id'];
+$role = $_SESSION['role'];
+$user_dept_query = "SELECT department FROM users WHERE id = :user_id";
+$user_dept_stmt = $db->prepare($user_dept_query);
+$user_dept_stmt->bindParam(':user_id', $user_id);
+$user_dept_stmt->execute();
+$user_department = $user_dept_stmt->fetchColumn();
+
+// Initialize permissions
+$can_view = false;
+$can_edit = false;
+$can_comment = false;
+$can_save = false;
+
+// Get appraisal ID if editing
+$appraisal_id = $_GET['id'] ?? null;
 
 $database = new DatabaseConfig();
 $db = $database->getConnection();
@@ -48,8 +63,30 @@ if ($appraisal_id) {
         exit();
     }
 
-    // Check permissions
-    if ($role != 'admin' && $user_id != $appraisal['appraiser_id']) {
+// Check permissions for the appraisal
+$permissions = hasAppraisalPermission($_SESSION['user_id'], $_SESSION['role'], $appraisal, $user_department);
+$can_view = $permissions['can_view'];
+$can_edit = $permissions['can_edit'];
+$can_comment = $permissions['can_comment'];
+$can_save = $permissions['can_save'];
+
+// Redirect if no view permission
+if (!$can_view) {
+    header("Location: dashboard.php");
+    exit();
+}
+
+// Get stage-specific permissions
+$stage_permissions = getAppraisalStagePermissions($_SESSION['role'], $appraisal['status'], $_SESSION['user_id'] == $appraisal['appraiser_id']);    // Specific role checks
+    if ($role == 'appraisee' && $user_id != $appraisal['appraisee_id']) {
+        header("Location: dashboard.php");
+        exit();
+    }
+    if ($role == 'appraiser' && $user_id != $appraisal['appraiser_id']) {
+        header("Location: dashboard.php");
+        exit();
+    }
+    if ($role == 'hod' && $user_department != $appraisal['appraisee_dept']) {
         header("Location: dashboard.php");
         exit();
     }
@@ -149,15 +186,10 @@ if ($_POST && isset($_POST['create_appraisal']) && !$appraisal_id) {
                                      VALUES (:appraisal_id, :key_result_area, :target, :resources_required, :competencies_required)";
                     $planning_stmt = $db->prepare($planning_query);
                     $planning_stmt->bindParam(':appraisal_id', $appraisal_id);
-                    $key_result_area = $_POST['key_result_areas'][$i];
-                    $target = $_POST['targets'][$i] ?? '';
-                    $resources = $_POST['resources_required'][$i] ?? '';
-                    $competencies = $_POST['competencies_required'][$i] ?? '';
-                    
-                    $planning_stmt->bindParam(':key_result_area', $key_result_area);
-                    $planning_stmt->bindParam(':target', $target);
-                    $planning_stmt->bindParam(':resources_required', $resources);
-                    $planning_stmt->bindParam(':competencies_required', $competencies);
+                    $planning_stmt->bindParam(':key_result_area', $_POST['key_result_areas'][$i]);
+                    $planning_stmt->bindParam(':target', $_POST['targets'][$i] ?? '');
+                    $planning_stmt->bindParam(':resources_required', $_POST['resources_required'][$i] ?? '');
+                    $planning_stmt->bindParam(':competencies_required', $_POST['competencies_required'] ?? '');
                     $planning_stmt->execute();
                 }
             }
@@ -181,6 +213,15 @@ if ($_POST && isset($_POST['create_appraisal']) && !$appraisal_id) {
 
 // Handle form submission - SAVE FINAL APPRAISAL
 if ($_POST && isset($_POST['save_final_appraisal']) && $appraisal_id) {
+    // Check edit permissions for current stage
+    $stage_permissions = getAppraisalStagePermissions($role, $appraisal['status'], 
+        $user_id == $appraisal['appraiser_id']);
+
+    if (!$can_save || !$stage_permissions['can_finalize']) {
+        $_SESSION['error'] = "You do not have permission to save the final appraisal at this stage.";
+        header("Location: dashboard.php");
+        exit();
+    }
     try {
         $db->beginTransaction();
         
@@ -198,10 +239,10 @@ if ($_POST && isset($_POST['save_final_appraisal']) && $appraisal_id) {
                     $insert_stmt = $db->prepare($insert_query);
                     $insert_stmt->bindParam(':appraisal_id', $appraisal_id);
                     $insert_stmt->bindParam(':target', $target);
-                    $insert_stmt->bindValue(':performance_assessment', $_POST['performance_assessment'][$index] ?? '');
-                    $insert_stmt->bindValue(':weight', $_POST['target_weight'][$index] ?? 5.00);
-                    $insert_stmt->bindValue(':score', $_POST['target_score'][$index] ?? null);
-                    $insert_stmt->bindValue(':comments', $_POST['target_comments'][$index] ?? '');
+                    $insert_stmt->bindParam(':performance_assessment', $_POST['performance_assessment'][$index] ?? '');
+                    $insert_stmt->bindParam(':weight', $_POST['target_weight'][$index] ?? 5.00);
+                    $insert_stmt->bindParam(':score', $_POST['target_score'][$index] ?? null);
+                    $insert_stmt->bindParam(':comments', $_POST['target_comments'][$index] ?? '');
                     $insert_stmt->execute();
                 }
             }
@@ -230,7 +271,7 @@ if ($_POST && isset($_POST['save_final_appraisal']) && $appraisal_id) {
                         $insert_stmt->bindParam(':weight', $weight);
                         $insert_stmt->bindParam(':score', $score);
                         $insert_stmt->bindParam(':weighted_score', $weighted_score);
-                        $insert_stmt->bindValue(':comments', $_POST['core_comments'][$category][$index] ?? '');
+                        $insert_stmt->bindParam(':comments', $_POST['core_comments'][$category][$index] ?? '');
                         $insert_stmt->execute();
                     }
                 }
@@ -260,7 +301,7 @@ if ($_POST && isset($_POST['save_final_appraisal']) && $appraisal_id) {
                         $insert_stmt->bindParam(':weight', $weight);
                         $insert_stmt->bindParam(':score', $score);
                         $insert_stmt->bindParam(':weighted_score', $weighted_score);
-                        $insert_stmt->bindValue(':comments', $_POST['noncore_comments'][$category][$index] ?? '');
+                        $insert_stmt->bindParam(':comments', $_POST['noncore_comments'][$category][$index] ?? '');
                         $insert_stmt->execute();
                     }
                 }
@@ -409,19 +450,89 @@ foreach ($existing_noncore as $item) {
     $existing_noncore_indexed[$key] = $item;
 }
 ?>
-?>
 
-<?php
-$page_title = $appraisal_id ? 'Final Appraisal' : 'Create New Appraisal';
-include 'includes/header.php';
-?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $appraisal_id ? 'Final Appraisal' : 'Create New Appraisal'; ?> - Hospital Appraisal System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 15px 15px 0 0;
+            margin: 0;
+        }
+        .rating-scale {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .competency-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .score-radio {
+            transform: scale(1.2);
+            margin: 0 0.5rem;
+        }
+        .target-row {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .performance-row {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+        .add-row-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .add-row-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+        .remove-row-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
     <div class="container-fluid py-4">
         <div class="row">
-            <div class="col-md-3 col-lg-2 px-0">
-                <?php include 'sidebar.php'; ?>
-            </div>
-            <div class="col-md-9 col-lg-10">
+            <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h1 class="h3 mb-1"><?php echo $appraisal_id ? 'Final Appraisal' : 'Create New Appraisal'; ?></h1>
@@ -662,6 +773,7 @@ include 'includes/header.php';
                         </div>
                     </div>
 
+                    <!-- FINAL APPRAISAL SECTION -->
                     <?php else: ?>
 
                     <!-- Section 4: End-of-Year Review -->
@@ -864,6 +976,7 @@ include 'includes/header.php';
                     </div>
 
                     <!-- Section 8: Assessment Decision -->
+                    <?php if ($can_edit): ?>
                     <div class="form-card">
                         <div class="section-header">
                             <h5 class="mb-0">
@@ -889,6 +1002,7 @@ include 'includes/header.php';
                     </div>
 
                     <!-- Section 9: Appraisee's Comments -->
+                    <?php if ($can_comment || ($appraisal && $appraisal['appraisee_id'] == $user_id)): ?>
                     <div class="form-card">
                         <div class="section-header">
                             <h5 class="mb-0">
@@ -909,6 +1023,7 @@ include 'includes/header.php';
                     </div>
 
                     <!-- Section 10: Head of Department's Comments -->
+                    <?php if ($role == 'admin' || $role == 'hod'): ?>
                     <div class="form-card">
                         <div class="section-header">
                             <h5 class="mb-0">
@@ -927,6 +1042,7 @@ include 'includes/header.php';
                             </div>
                         </div>
                     </div>
+                    <?php endif; ?>
 
                     <!-- Action Buttons and Summary -->
                     <div class="form-card">
@@ -1007,7 +1123,9 @@ include 'includes/header.php';
                                         <a href="view_appraisal.php?id=<?php echo $appraisal_id; ?>" class="btn btn-outline-secondary">
                                             <i class="fas fa-times me-2"></i>Cancel
                                         </a>
-                                        <button type="submit" name="save_final_appraisal" value="1" class="btn btn-success btn-lg">
+                                        <?php if ($role == 'admin' || $role == 'appraiser'): ?>
+                            <?php if ($can_save): ?>
+                        <button type="submit" name="save_final_appraisal" value="1" class="btn btn-success btn-lg">
                                             <i class="fas fa-check-circle me-2"></i>Complete Final Appraisal
                                         </button>
                                     </div>
@@ -1022,6 +1140,7 @@ include 'includes/header.php';
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         let performanceRowCount = 0;
         let trainingRowCount = 0;
@@ -1282,4 +1401,5 @@ include 'includes/header.php';
             });
         }
     </script>
-<?php include 'includes/footer.php'; ?>
+</body>
+</html>

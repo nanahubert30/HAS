@@ -30,7 +30,7 @@ function authenticate($login_field, $password) {
                   AND password = :password";
         $stmt = $db->prepare($query);
         $stmt->bindParam(":login_field", $login_field);
-        $stmt->bindParam(":password", md5($password));
+        $stmt->bindValue(":password", md5($password));
         $stmt->execute();
         
         if ($stmt->rowCount() > 0) {
